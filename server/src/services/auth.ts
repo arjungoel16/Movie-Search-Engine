@@ -4,7 +4,9 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 
-export const authenticateToken = ({ req }: any) => {
+import { Request } from 'express';
+
+export const authenticateToken = ({ req }: { req: Request }) => {
   // Allows token to be sent via req.body, req.query, or headers
   let token = req.body.token || req.query.token || req.headers.authorization;
 
@@ -20,10 +22,10 @@ export const authenticateToken = ({ req }: any) => {
 
   // Try to verify the token
   try {
-    const { data }: any = jwt.verify(token, process.env.JWT_SECRET_KEY || '', { maxAge: '2hr' });
+    const { data }: { data: { username: string; email: string; _id: string } } = jwt.verify(token, process.env.JWT_SECRET_KEY || '', { maxAge: '2hr' }) as { data: { username: string; email: string; _id: string } };
     // If the token is valid, attach the user data to the request object
     req.user = data;
-  } catch (err) {
+  } catch {
     // If the token is invalid, log an error message
     console.log('Invalid token');
   }
@@ -35,7 +37,7 @@ export const authenticateToken = ({ req }: any) => {
 export const signToken = (username: string, email: string, _id: unknown) => {
   // Create a payload with the user information
   const payload = { username, email, _id };
-  const secretKey: any = process.env.JWT_SECRET_KEY; // Get the secret key from environment variables
+  const secretKey: string | undefined = process.env.JWT_SECRET_KEY; // Get the secret key from environment variables
 
   if (!secretKey) {
     throw new Error('JWT_SECRET_KEY is missing in environment variable.');
