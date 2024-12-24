@@ -63,6 +63,15 @@ const typeDefs = gql`
     voteAverage: Float
   }
 
+  # input MovieInput {
+  #   title: String!
+  #   description: String!
+  #   genre: String!
+  #   director: String!
+  #   cast: [String]!
+  #   year: Int!
+  # }
+
   input UserInput {
     username: String!
     email: String!

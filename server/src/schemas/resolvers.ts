@@ -26,7 +26,7 @@ const resolvers: { Query: any; Mutation: any } = {
       return await User.findOne({ _id: context.user._id })
         .populate({ path: 'nextUpMovies', match: filters })
         .populate({ path: 'seenItMovies', match: filters });
-    }, // Add a comma here
+    },
     trendingMovies: async () => {
       const response = await fetch(
         `${BASE_URL}/trending/movie/day?language=en-US`,
@@ -56,8 +56,7 @@ const resolvers: { Query: any; Mutation: any } = {
         mediaType: movie.media_type,
       }));
     },
-
-
+  },
   Mutation: {
     addUser: async (
       _: unknown,
@@ -101,7 +100,7 @@ const resolvers: { Query: any; Mutation: any } = {
             context.user._id,
             { $addToSet: { savedMovie: { movieId } } },
             { new: true, runValidators: true }
-          ).populate('savedBooks');
+          ).populate('savedMovies');
 
           console.log('Updated user:', updatedUser); // log
 
@@ -213,6 +212,7 @@ const resolvers: { Query: any; Mutation: any } = {
       return user;
     }
   },
-}};
+};
+
 
 export default resolvers;
