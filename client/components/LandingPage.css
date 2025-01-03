@@ -1,0 +1,51 @@
+.landing-container {
+    position: relative;
+    color: white;
+    text-align: center;
+    padding: 50px;
+    height: 100vh;  /* Adjust based on your design needs */
+    background-image: url('/path/to/your/background-image.jpg');  /* Update with actual path */
+    background-size: cover;
+    background-position: center;
+  }
+  
+  .landing-container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 255, 0.5);  /* Blue overlay with 50% opacity */
+    z-index: -1;
+  }
+  
+  h1 {
+    margin-bottom: 0;
+  }
+  
+  h2 {
+    font-size: 24px;
+    margin-top: 10px;
+  }
+  
+  p {
+    font-size: 18px;
+    margin-top: 20px;
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .begin-button {
+    background-color: blue;
+    color: white;
+    font-size: 20px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    margin-top: 20px;
+    cursor: pointer;
+  }
+  
+  
