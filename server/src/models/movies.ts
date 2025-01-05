@@ -1,9 +1,8 @@
-const {Schema} = require('mongoose');
-const { cast } = require('sequelize');
+import {Schema} from "mongoose";
 
 // Define schema -> using this schema we will create a model
 
-const movieSchema = new Schema({
+export const movieSchema = new Schema({
     title: [
     {
         type: String,

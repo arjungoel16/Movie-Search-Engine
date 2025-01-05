@@ -48,7 +48,7 @@ const startApolloServer = async () => {
     });
   }
   
-  db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+  // db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
   app.listen(PORT, () => {
     console.log(`API server running on port ${PORT}!`);
