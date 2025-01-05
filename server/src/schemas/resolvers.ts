@@ -1,6 +1,6 @@
-import User from '../models/User.js';
+import User from '../models/index.js';
 import { AuthenticationError, signToken } from '../services/auth.js';
-import Movie from '../models/movies.js';
+// import Movie from '../models/movies.js';
 
 interface User {
   _id: string;
@@ -23,7 +23,7 @@ const resolvers: { Query: any; Mutation: any } = {
       if (!context.user) throw new AuthenticationError('You must be logged in');
 
       const filters = filter ? { /* Add filtering logic */ } : {};
-      return await User.findOne({ _id: context.user._id })
+      return await User.User.findOne({ _id: context.user._id })
         .populate({ path: 'nextUpMovies', match: filters })
         .populate({ path: 'seenItMovies', match: filters });
     },
@@ -62,83 +62,83 @@ const resolvers: { Query: any; Mutation: any } = {
       _: unknown,
       { input }: { input: { username: string; email: string; password: string } }
     ) => {
-      const user = await User.create(input);
+      const user = await User.User.create(input);
       const token = signToken(user.username, user.email, user._id);
       return { token, user };
     },
 
-    login: async (_: any, { email, password }: any) => {
-      const user = await User.findOne({ $or: [{ username: email }, { email }] });
+    login: async (_: any, {email}: any) => {
+      const user = await User.User.findOne({ $or: [{ username: email }, { email }] });
 
       if (!user) {
         throw new AuthenticationError("Can't find this user");
       }
 
-      const correctPw = await user.isCorrectPassword(password);
-      if (!correctPw) {
-        throw new AuthenticationError('Incorrect password!');
-      }
+      // const correctPw = await user.isCorrectPassword(password);
+      // if (!correctPw) {
+      //   throw new AuthenticationError('Incorrect password!');
+      // }
 
       const token = signToken(user.username, user.email, user._id);
       return { token, user };
     },
     
   
-    saveMovie: async (_parent: any, { movieId }: { movieId: string }, context: any) => {
-      console.log('User saved a movie', context.user);
-      console.log('Incoming movie', movieId);
-      if (context.user) {
-        console.log('Received movie data:', movieId); // log
+    // saveMovie: async (_parent: any, { movieId }: { movieId: string }, context: any) => {
+    //   console.log('User saved a movie', context.user);
+    //   console.log('Incoming movie', movieId);
+    //   if (context.user) {
+    //     console.log('Received movie data:', movieId); // log
 
-        try {
-          // Create the book
-          const movies = await Movie.create({ movieId });
-          console.log('Created movie:', movies); // log 
+    //     try {
+    //       // Create the book
+    //       const movies = await Movie.create({ movieId });
+    //       console.log('Created movie:', movies); // log 
 
-          // Update the user and add the book to their savedBooks
-          const updatedUser = await User.findByIdAndUpdate(
-            context.user._id,
-            { $addToSet: { savedMovie: { movieId } } },
-            { new: true, runValidators: true }
-          ).populate('savedMovies');
+    //       // Update the user and add the book to their savedBooks
+    //       const updatedUser = await User.findByIdAndUpdate(
+    //         context.user._id,
+    //         { $addToSet: { savedMovie: { movieId } } },
+    //         { new: true, runValidators: true }
+    //       ).populate('savedMovies');
 
-          console.log('Updated user:', updatedUser); // log
+    //       console.log('Updated user:', updatedUser); // log
 
-          if (!updatedUser) {
-            throw new Error('User not found');
-          }
+    //       if (!updatedUser) {
+    //         throw new Error('User not found');
+    //       }
 
-          // Return the newly created book, not the user
-          return movies;
-        } catch (error) {
-          console.error('Error in saveMovie mutation:', error);
-          throw new Error('Failed to save the movie');
-        }
-      }
-      throw new AuthenticationError('You need to be logged in!');
-    },
+    //       // Return the newly created book, not the user
+    //       return movies;
+    //     } catch (error) {
+    //       console.error('Error in saveMovie mutation:', error);
+    //       throw new Error('Failed to save the movie');
+    //     }
+    //   }
+    //   throw new AuthenticationError('You need to be logged in!');
+    // },
 
 
-    removeMovie: async (_: any, { movieId }: { movieId: string }, context: Context) => {
-      if (context.user) {
-        const updatedUser = await User.findOneAndUpdate(
-          { _id: context.user._id },
-          { $pull: { savedMovies: { movieId } } },
-          { new: true }
-        );
+    // removeMovie: async (_: any, { movieId }: { movieId: string }, context: Context) => {
+    //   if (context.user) {
+    //     const updatedUser = await User.findOneAndUpdate(
+    //       { _id: context.user._id },
+    //       { $pull: { savedMovies: { movieId } } },
+    //       { new: true }
+    //     );
 
-        if (!updatedUser) {
-          throw new AuthenticationError("Couldn't find user with this id!");
-        }
+    //     if (!updatedUser) {
+    //       throw new AuthenticationError("Couldn't find user with this id!");
+    //     }
 
-        return updatedUser;
-      }
-      throw new AuthenticationError('You need to be logged in!');
-    },
+    //     return updatedUser;
+    //   }
+    //   throw new AuthenticationError('You need to be logged in!');
+    // },
 
     rateMovie: async (_: any, { movieId, rating }: { movieId: string; rating: number }, context: Context) => {
       if (context.user) {
-        const updatedUser = await User.findOneAndUpdate(
+        const updatedUser = await User.User.findOneAndUpdate(
           { _id: context.user._id },
           {
             $set: {
@@ -160,57 +160,57 @@ const resolvers: { Query: any; Mutation: any } = {
       throw new AuthenticationError('You need to be logged in!');
     },
 
-    async saveNextUpMovie(_ : unknown, { input } : any, context : Context) {
-      if (!context.user) throw new AuthenticationError('You must be logged in.');
+    // async saveNextUpMovie(_ : unknown, { input } : any, context : Context) {
+    //   if (!context.user) throw new AuthenticationError('You must be logged in.');
     
-      const { movieId, title, overview, posterPath, releaseDate, voteAverage } = input;   // title, description, genre, director, cast, year
+    //   const { movieId, title, overview, posterPath, releaseDate, voteAverage } = input;   // title, description, genre, director, cast, year
     
-      let movie = await Movie.findOne({ movieId });
-      if (!movie) {
-        movie = await Movie.create({
-          movieId,
-          title,
-          overview,
-          posterPath,
-          releaseDate,
-          voteAverage,
-        });
-      }
+    //   let movie = await Movie.findOne({ movieId });
+    //   if (!movie) {
+    //     movie = await Movie.create({
+    //       movieId,
+    //       title,
+    //       overview,
+    //       posterPath,
+    //       releaseDate,
+    //       voteAverage,
+    //     });
+    //   }
     
-      const user = await User.findByIdAndUpdate(
-        context.user._id,
-        { $addToSet: { nextUpMovies: movie._id } },
-        { new: true }
-      ).populate('nextUpMovies');
+    //   const user = await User.findByIdAndUpdate(
+    //     context.user._id,
+    //     { $addToSet: { nextUpMovies: movie._id } },
+    //     { new: true }
+    //   ).populate('nextUpMovies');
     
-      return user;
-    },
+    //   return user;
+    // },
 
-    async saveSeenItMovie(_ : unknown, { input }: any, context: Context) {
-      if (!context.user) throw new AuthenticationError('You must be logged in.');
+    // async saveSeenItMovie(_ : unknown, { input }: any, context: Context) {
+    //   if (!context.user) throw new AuthenticationError('You must be logged in.');
     
-      const { movieId, title, overview, posterPath, releaseDate, voteAverage } = input;
+    //   const { movieId, title, overview, posterPath, releaseDate, voteAverage } = input;
     
-      let movie = await Movie.findOne({ movieId });
-      if (!movie) {
-        movie = await Movie.create({
-          movieId,
-          title,
-          overview,
-          posterPath,
-          releaseDate,
-          voteAverage,
-        });
-      }
+    //   let movie = await Movie.findOne({ movieId });
+    //   if (!movie) {
+    //     movie = await Movie.create({
+    //       movieId,
+    //       title,
+    //       overview,
+    //       posterPath,
+    //       releaseDate,
+    //       voteAverage,
+    //     });
+    //   }
     
-      const user = await User.findByIdAndUpdate(
-        context.user._id,
-        { $addToSet: { seenItMovies: movie._id } },
-        { new: true }
-      ).populate('seenItMovies');
+    //   const user = await User.findByIdAndUpdate(
+    //     context.user._id,
+    //     { $addToSet: { seenItMovies: movie._id } },
+    //     { new: true }
+    //   ).populate('seenItMovies');
     
-      return user;
-    }
+    //   return user;
+    // }
   },
 };
 
