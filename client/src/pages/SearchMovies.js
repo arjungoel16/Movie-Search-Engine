@@ -75,7 +75,7 @@ const SearchMovies = () => {
       return false;
     }
 
-    console.log(bookToSave);
+    console.log(movieToSave);
 
     try {
       await saveMovie({
