@@ -53,7 +53,7 @@ const SearchMovies = () => {
       const movieData = items.map((book) => ({
         movieId: movie.id,
         title: book.volumeInfo.title,
-        Director: book.volumeInfo.Director || ["No Director to display"],
+        // Director: book.volumeInfo.Director || ["No Director to display"],
       }));
 
       setSearchedMovie(movieData);
