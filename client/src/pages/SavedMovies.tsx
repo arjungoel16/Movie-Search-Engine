@@ -1,8 +1,8 @@
     import React from "react";
     import {
-    Jumbotron,
+    Jumbotron, //this one is no longer in the react library
     Container,
-    CardColumns,
+    CardColumns, //this one is no longer in the react library
     Card,
     Button,
     } from "react-bootstrap";

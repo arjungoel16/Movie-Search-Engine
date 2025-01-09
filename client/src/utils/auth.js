@@ -1,4 +1,4 @@
-import decode from 'jwt-decode';
+import { jwtDecode as decode } from "jwt-decode";
 
 // allows us to create a user and that person to log in 
 class AuthService {

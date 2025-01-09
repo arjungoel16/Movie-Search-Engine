@@ -4,7 +4,7 @@
     text-align: center;
     padding: 50px;
     height: 100vh;  /* Adjust based on your design needs */
-    background-image: url('/path/to/your/background-image.jpg');  /* Update with actual path */
+    background-image: url('/landing-bg-2.png'); 
     background-size: cover;
     background-position: center;
   }
