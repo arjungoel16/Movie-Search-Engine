@@ -3,10 +3,10 @@ import { useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 
-import Auth from '../utils/auth';
-import type { User } from '../models/User';
+import Auth from '../utils/auth.ts';
+import User from '../models/user.ts'; 
 
-import { LOGIN_USER } from '../utils/mutations';
+import { LOGIN_USER } from '../utils/mutations.ts';
 import { useMutation } from '@apollo/client';
 
 
