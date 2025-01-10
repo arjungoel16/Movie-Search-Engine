@@ -4,16 +4,16 @@ import { jwtDecode as decode } from "jwt-decode";
 class AuthService {
   // get user data
   getProfile() {
-    return decode(this.getToken());
+    return decode(this.getToken()|| "");
   }
 // making sure if the user is logged in or not
   logIn() {
   
-    const token = this.getTok();
+    const token = this.getToken();
     return !!token && !this.isTokExpired(token); 
   }
 
-  isTokExpired(token) {
+  isTokExpired(token: string) {
     try {
       const decoded = decode(token);
       if (decoded.exp < Date.now() / 1000) {
@@ -25,11 +25,11 @@ class AuthService {
   }
 
   // allows us to retrieve the token
-  getTok() {
+  getToken() {
     return localStorage.getItem('id_token');
   }
 
-  login(idToken) {
+  login(idToken: string) {
     // Saves user token to localStorage
     localStorage.setItem('id_token', idToken);
     window.location.assign('/');
