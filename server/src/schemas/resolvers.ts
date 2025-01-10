@@ -17,7 +17,7 @@ interface Context {
 const TMDB_API_KEY = process.env.REACT_APP_TMDB_API_KEY;
 const BASE_URL = 'https://api.themoviedb.org/3';
 
-const resolvers: { Query: any; Mutation: any } = {
+const resolvers: { Query: unknown; Mutation: unknown } = {
   Query: {
     me: async (_: unknown, { filter }: { filter?: { type: string } }, context: Context) => {
       if (!context.user) throw new AuthenticationError('You must be logged in');
@@ -38,7 +38,23 @@ const resolvers: { Query: any; Mutation: any } = {
       );
       const { results } = await response.json();
 
-      return results.map((movie: any) => ({
+      return results.map((movie: { 
+        adult: boolean; 
+        backdrop_path: string; 
+        genre_ids: number[]; 
+        id: number; 
+        original_language: string; 
+        original_title: string; 
+        overview: string; 
+        popularity: number; 
+        poster_path: string; 
+        release_date: string; 
+        title: string; 
+        video: boolean; 
+        vote_average: number; 
+        vote_count: number; 
+        media_type: string; 
+      }) => ({
         adult: movie.adult,
         backdropPath: movie.backdrop_path,
         genreIds: movie.genre_ids,
@@ -67,7 +83,7 @@ const resolvers: { Query: any; Mutation: any } = {
       return { token, user };
     },
 
-    login: async (_: any, {email}: any) => {
+    login: async (_: unknown, { email }: { email: string }) => {
       const user = await User.User.findOne({ $or: [{ username: email }, { email }] });
 
       if (!user) {
@@ -136,7 +152,7 @@ const resolvers: { Query: any; Mutation: any } = {
     //   throw new AuthenticationError('You need to be logged in!');
     // },
 
-    rateMovie: async (_: any, { movieId, rating }: { movieId: string; rating: number }, context: Context) => {
+    rateMovie: async (_: unknown, { movieId, rating }: { movieId: string; rating: number }, context: Context) => {
       if (context.user) {
         const updatedUser = await User.User.findOneAndUpdate(
           { _id: context.user._id },
