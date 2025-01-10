@@ -12,7 +12,7 @@ import {
 import { useMutation } from "@apollo/client";
 
 import Auth from "../utils/auth";
-import { searchGoogleMovies } from "../utils/API";
+import { searchGoogleMovies } from "../utils/api";
 import { saveMovieIds, getSavedMovieIds } from "../utils/localStorage";
 import { SAVE_BOOK } from "../utils/mutations";
 
@@ -63,10 +63,11 @@ const SearchMovies = () => {
     }
   };
 
-//   this function allows the movie to be saved to the user's account
+  //   this function allows the movie to be saved to the user's account
   const handleSaveMovie = async (movieId) => {
-
-    const movieToSave = searchedmovie.find((movie) => movie.movieId === movieId);
+    const movieToSave = searchedmovie.find(
+      (movie) => movie.movieId === movieId
+    );
 
     // get token
     const token = Auth.loggedIn() ? Auth.getToken() : null;
