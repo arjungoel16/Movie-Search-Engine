@@ -1,3 +1,12 @@
+    import React from "react";
+    import {
+    Jumbotron, //this one is no longer in the react library
+    Container,
+    CardColumns, //this one is no longer in the react library
+    Card,
+    Button,
+    } from "react-bootstrap";
+    import { useQuery, useMutation } from "@apollo/client";
 //     import React from "react";
 //     import {
 //     Jumbotron,

@@ -2,7 +2,7 @@ import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
 import App from './app.tsx'
-import LandingPage from './components/LandingPage.tsx'
+import LandingPage from './pages/LandingPage/LandingPage.tsx'
 
 import SavedMovies from './pages/SavedMovies.tsx'
 import SearchMovies from './pages/SearchMovies.ts'
