@@ -4,7 +4,7 @@ import type { ChangeEvent, FormEvent } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 
 import Auth from '../utils/auth.ts';
-import User from '../models/user.ts'; 
+import {User} from '../models/user.ts'; 
 
 import { LOGIN_USER } from '../utils/mutations.ts';
 import { useMutation } from '@apollo/client';
@@ -12,7 +12,7 @@ import { useMutation } from '@apollo/client';
 
 // biome-ignore lint/correctness/noEmptyPattern: <explanation>
 const LoginForm = ({}: { handleModalClose: () => void }) => {
-  const [userFormData, setUserFormData] = useState<User>({ username: '', email: '', password: '', savedBooks: [] });
+  const [userFormData, setUserFormData] = useState<User>({ username: '', email: '', password: '', savedMovies: [] });
   const [validated] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [login] = useMutation(LOGIN_USER);
@@ -51,7 +51,7 @@ const LoginForm = ({}: { handleModalClose: () => void }) => {
       username: '',
       email: '',
       password: '',
-      savedBooks: [],
+      savedMovies: [],
     });
   };
 

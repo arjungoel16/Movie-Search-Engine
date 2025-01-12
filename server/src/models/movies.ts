@@ -3,40 +3,36 @@ import {Schema} from "mongoose";
 // Define schema -> using this schema we will create a model
 
 export const movieSchema = new Schema({
-    title: [
+    title: 
     {
         type: String,
         required: true
     },
-    ],
 
-    description: [
+    description: 
     {
         type: String,
         required: true,
     },
-    ],
 
-    genre: [
+    genre: 
     {
-        type: String
+        type: String,
+    },
+
+    director: 
+    {
+        type: String,
+    },
+
+    cast: 
+    [{
+        type: String,
     },
     ],
-    director: [
-    {
-        type: String
-    },
-    ],
-    cast: [
-    {
-        type: String
-    },
-    ],
-    year: [
+    year: 
     {
         type: Number,
         required: true
     },
-    ],
-
 });
