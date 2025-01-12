@@ -3,15 +3,18 @@
 
 import { Container, Card, Button, Row, Col } from 'react-bootstrap';
 import { useQuery, useMutation } from '@apollo/client';
+import { REMOVE_MOVIE} from "../utils/mutations";
 
 import Auth from '../utils/auth';
-import { removeMovie } from '../utils/localStorage';
+import { removeMovieId } from '../utils/localStorage';
 
 import React from 'react';
 import { GET_ME } from '../utils/queries';
 
 const SavedMovies: React.FC = () => {
   const { loading, error, data } = useQuery(GET_ME);
+
+  const [removeMovie, { error }] = useMutation(REMOVE_MOVIE)
 
   console.log('Query data:', data);
 
@@ -34,7 +37,7 @@ const SavedMovies: React.FC = () => {
         variables: { movieId },
       });
 
-      removeMovie(movieId);
+      removeMovieId(movieId);
     } catch (err) {
       console.error(err);
     }
