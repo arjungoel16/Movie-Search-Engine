@@ -1,163 +1,114 @@
-// Purpose: This file contains the code for the search movies page. This page allows the user to search for movies and save them to their account. The user can search for movies by title and save them to their account. The user can also view the movies they have saved to their account.
 import React, { useState, useEffect } from "react";
-import {
-  Jumbotron,
-  Container,
-  Col,
-  Form,
-  Button,
-  Card,
-  CardColumns,
-} from "react-bootstrap";
-import { useMutation } from "@apollo/client";
-
-import Auth from "../utils/auth";
-import { searchGoogleMovies } from "../utils/api";
-import { saveMovieIds, getSavedMovieIds } from "../utils/localStorage";
-import { SAVE_BOOK } from "../utils/mutations";
+import { useMutation } from "@apollo/client"; // Assuming you are using Apollo for GraphQL
+import { SAVE_MOVIE } from '../utils/mut';
+// Mock mutation, replace with actual mutation if you have one
+ // Replace with your actual GraphQL mutation if required
 
 const SearchMovies = () => {
-  // create state for holding returned google api data
-  const [searchedMovie, setSearchedMovie] = useState([]);
-  // create state for holding our search field data
-  const [searchInput, setSearchInput] = useState("");
-
-  // create state to hold saved bookId values
-  const [savedMovieIds, setSavedMovieIds] = useState(getSavedMovieIds());
-
-  const [saveMovie] = useMutation(SAVE_Movie);
-
-  // set up useEffect hook to save `savedBookIds` list to localStorage on component unmount
-  // learn more here: https://reactjs.org/docs/hooks-effect.html#effects-with-cleanup
-  useEffect(() => {
-    return () => saveMovieIds(savedMovieIds);
+  // State for holding returned movie data from the search API
+  const [searchedMovie, setSearchedMovie] = useState<any[]>([]);
+  // State for holding the input search text
+  const [searchInput, setSearchInput] = useState<string>("");
+  // State to hold saved movie IDs (from localStorage initially)
+  const [savedMovieIds, setSavedMovieIds] = useState<string[]>(() => {
+    // Load saved movie IDs from localStorage on component mount
+    const savedMovies = localStorage.getItem("savedMovies");
+    return savedMovies ? JSON.parse(savedMovies) : [];
   });
 
-  // create method to search for books and set state on form submit
-  const handleFormSubmit = async (event) => {
+  // Mutation hook for saving movies (optional, if using GraphQL)
+  // const [saveMovie] = useMutation(SAVE_MOVIE);
+
+  // useEffect hook to save `savedMovieIds` to localStorage whenever they change
+  useEffect(() => {
+    if (savedMovieIds.length > 0) {
+      // Save to localStorage
+      localStorage.setItem("savedMovies", JSON.stringify(savedMovieIds));
+    }
+  }, [savedMovieIds]);
+
+  // Method to handle search input change
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchInput(event.target.value);
+  };
+
+  // Method to handle form submission for searching movies
+  const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (!searchInput) {
-      return false;
+      return; // Return early if input is empty
     }
 
     try {
-      const response = await searchGoogleMovie(searchInput);
+      const response = await fetch(`https://api.example.com/search?query=${searchInput}`);
 
       if (!response.ok) {
-        throw new Error("something went wrong!");
+        throw new Error("Something went wrong while fetching movie data!");
       }
 
-      const { items } = await response.json();
+      const data = await response.json();
 
-      const movieData = items.map((book) => ({
+      // Assuming 'data.items' contains movie results
+      const movieData = data.items.map((movie: any) => ({
         movieId: movie.id,
-        title: book.volumeInfo.title,
-        // Director: book.volumeInfo.Director || ["No Director to display"],
+        title: movie.volumeInfo.title,
       }));
 
       setSearchedMovie(movieData);
-      setSearchInput("");
-    } catch (err) {
-      console.error(err);
+      setSearchInput(""); // Clear the search input
+    } catch (error) {
+      console.error("Error fetching movies:", error);
     }
   };
 
-  //   this function allows the movie to be saved to the user's account
-  const handleSaveMovie = async (movieId) => {
-    const movieToSave = searchedmovie.find(
-      (movie) => movie.movieId === movieId
-    );
-
-    // get token
-    const token = Auth.loggedIn() ? Auth.getToken() : null;
-
-    if (!token) {
-      return false;
+  // Method to handle saving a movie to localStorage
+  const handleSaveMovie = (movieId: string) => {
+    if (savedMovieIds.includes(movieId)) {
+      alert("This movie is already saved.");
+      return;
     }
 
-    console.log(movieToSave);
-
-    try {
-      await saveMovie({
-        variables: { ...movieToSave },
-      });
-
-      // if book successfully saves to user's account, save book id to state
-      setSavedMovieIds([...savedMovieIds, movieToSave.movieId]);
-    } catch (err) {
-      console.error(err);
-    }
+    const updatedSavedMovieIds = [...savedMovieIds, movieId];
+    setSavedMovieIds(updatedSavedMovieIds); // Update state
   };
 
   return (
-    <>
-      <Jumbotron fluid className="text-light bg-dark">
-        <Container>
-          <h1>Search for movie!</h1>
-          <Form onSubmit={handleFormSubmit}>
-            <Form.Row>
-              <Col xs={10} md={8}>
-                <Form.Control
-                  name="searchInput"
-                  value={searchInput}
-                  onChange={(e) => setSearchInput(e.target.value)}
-                  type="text"
-                  size="lg"
-                  placeholder="Search for a movie"
-                />
-              </Col>
-              <Col xs={12} md={4}>
-                <Button type="submit" variant="success" size="lg">
-                  Submit Search
-                </Button>
-              </Col>
-            </Form.Row>
-          </Form>
-        </Container>
-      </Jumbotron>
+    <div>
+      <h1>Search for Movies</h1>
+      <form onSubmit={handleFormSubmit}>
+        <input
+          type="text"
+          placeholder="Search for a movie"
+          value={searchInput}
+          onChange={handleInputChange}
+        />
+        <button type="submit">Search</button>
+      </form>
 
-      <Container>
-        <h2>
-          {searchedBooks.length
-            ? `Viewing ${searchedMovie.length} results:`
-            : "Search for a book to begin"}
-        </h2>
-        <CardColumns>
-          {searchedMovie.map((movie) => {
-            return (
-              <Card key={movie.movieId} border="dark">
-                {movie.image ? (
-                  <Card.Img
-                    src={book.image}
-                    alt={`The cover for ${book.title}`}
-                    variant="top"
-                  />
-                ) : null}
-                <Card.Body>
-                  <Card.Title>{book.title}</Card.Title>
-                  {Auth.loggedIn() && (
-                    <Button
-                      disabled={savedBookIds?.some(
-                        (savedMovieId) => savedMovieId === movie.movieId
-                      )}
-                      className="btn-block btn-info"
-                      onClick={() => handleSaveMovie(movie.movieId)}
-                    >
-                      {savedMovieId?.some(
-                        (savedMovieId) => savedMovieId === movie.movieId
-                      )
-                        ? "This movie has already been saved!"
-                        : "Save this movie!"}
-                    </Button>
-                  )}
-                </Card.Body>
-              </Card>
-            );
-          })}
-        </CardColumns>
-      </Container>
-    </>
+      <div>
+        <h2>Search Results</h2>
+        <ul>
+          {searchedMovie.map((movie) => (
+            <li key={movie.movieId}>
+              <span>{movie.title}</span>
+              <button onClick={() => handleSaveMovie(movie.movieId)}>
+                Save
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div>
+        <h2>Saved Movies</h2>
+        <ul>
+          {savedMovieIds.map((movieId) => (
+            <li key={movieId}>{movieId}</li>
+          ))}
+        </ul>
+      </div>
+    </div>
   );
 };
 
