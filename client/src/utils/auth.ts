@@ -1,6 +1,6 @@
 import { jwtDecode as decode } from "jwt-decode";
 
-// allows us to create a user and that person to log in 
+// allows us to create a user and that person to log in
 class AuthService {
   // get user data
   getProfile() {
@@ -8,15 +8,15 @@ class AuthService {
   }
 // making sure if the user is logged in or not
   logIn() {
-  
+
     const token = this.getToken();
-    return !!token && !this.isTokExpired(token); 
+    return !!token && !this.isTokExpired(token);
   }
 
   isTokExpired(token: string) {
     try {
       const decoded = decode(token);
-      if (decoded.exp < Date.now() / 1000) {
+      if (decoded.exp && decoded.exp < Date.now() / 1000) {
         return true;
       } else return false;
     } catch (err) {
