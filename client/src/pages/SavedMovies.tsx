@@ -30,9 +30,7 @@ const SavedMovies: React.FC = () => {
     }
 
     try {
-      await removeMovieId({
-        variables: { movieId },
-      });
+      removeMovieId(movieId);
 
       removeMovieId(movieId);
     } catch (err) {
