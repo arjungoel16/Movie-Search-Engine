@@ -9,17 +9,16 @@ export const getSavedMovieIds = () => {
 
 
 // allows us to export the movie ids
-export const saveMovieIds = (MovieIdArr) => {
+export const saveMovieIds = (MovieIdArr: string[]) => {
   if (MovieIdArr.length) {
-    
-    localStorage.setItem('save_movie', JSON.stringify(MovieIdArr));
+    localStorage.setItem('save_movies', JSON.stringify(MovieIdArr));
   } else {
     // if there is no movie name, remove it
     localStorage.removeItem('save_movies');
   }
 };
 
-export const removeBookId = (bookId) => {
+export const removeMovieId = (movieId) => {
   const savedBookIds = localStorage.getItem('saved_books')
     ? JSON.parse(localStorage.getItem('saved_books'))
     : null;

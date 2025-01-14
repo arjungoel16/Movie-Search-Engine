@@ -5,7 +5,7 @@ import { Container, Card, Button, Row, Col } from 'react-bootstrap';
 import { useQuery, useMutation } from '@apollo/client';
 
 import Auth from '../utils/auth';
-import { removeMovie } from '../utils/localStorage';
+import { removeMovieId } from '../utils/localStorage';
 
 import React from 'react';
 import { GET_ME } from '../utils/queries';
@@ -30,11 +30,11 @@ const SavedMovies: React.FC = () => {
     }
 
     try {
-      await removeMovie({
+      await removeMovieId({
         variables: { movieId },
       });
 
-      removeMovie(movieId);
+      removeMovieId(movieId);
     } catch (err) {
       console.error(err);
     }
