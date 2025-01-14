@@ -24,19 +24,18 @@ export const saveMovieIds = (MovieIdArr: string[]) => {
 };
 // allows us to remove the movie
 
-export const removeMovieId = (movieId) => {
-  const savedBookIds = localStorage.getItem('saved_movies')
-    ? JSON.parse(localStorage.getItem('saved_movies'))
+export const removeMovieId = (movieId: string): boolean => {
+  const savedMovieIds: string[] | null = localStorage.getItem('save_movies')
+    ? JSON.parse(localStorage.getItem('save_movies') || '[]')
     : null;
 
-  if (!savedBookIds) {
+  if (!savedMovieIds) {
     return false;
   }
 
   // updating the movies in the local storage
-
-  const updatedSavedMovieIds: string[] = savedBookIds?.filter((savedMovieId: string) => savedMovieId !== movieId);
-    localStorage.setItem('save_movies', JSON.stringify(updatedSavedMovieIds));
-    return true;
-  };
+  const updatedSavedMovieIds: string[] = savedMovieIds.filter((savedMovieId: string) => savedMovieId !== movieId);
+  localStorage.setItem('save_movies', JSON.stringify(updatedSavedMovieIds));
+  return true;
+};
 

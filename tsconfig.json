@@ -28,5 +28,6 @@
     "useUnknownInCatchVariables": true /* Ensure 'unknown' is used for catch clause variables. */,
     /* Output */
     "outDir": "./dist" /* Redirect output structure to the directory. */
-  }
+  },
+  "exclude": ["dist"]
 }
