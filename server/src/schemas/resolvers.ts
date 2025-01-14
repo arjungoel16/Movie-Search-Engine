@@ -1,5 +1,5 @@
-import User from '../models/index';
-import { AuthenticationError, signToken } from '../services/auth';
+import User from '../models/index.js';
+import { AuthenticationError, signToken } from '../services/auth.js';
 // import Movie from '../models/movies.js';
 
 interface User {
@@ -100,39 +100,39 @@ const resolvers = {
     },
     
   
-    // saveMovie: async (_parent: any, { movieId }: { movieId: string }, context: any) => {
-    //   console.log('User saved a movie', context.user);
-    //   console.log('Incoming movie', movieId);
-    //   if (context.user) {
-    //     console.log('Received movie data:', movieId); // log
+    saveMovie: async (_parent: any, { input }: { input: unknown }, context: any) => {
+      
+      if (context.user) {
+        console.log('Received movie data:', input); // log
 
-    //     try {
-    //       // Create the book
-    //       const movies = await Movie.create({ movieId });
-    //       console.log('Created movie:', movies); // log 
+        try {
+          // Create the book
+          const newMovie = await Movie.create(input);
+          console.log('Created movie:', newMovie); // log 
 
-    //       // Update the user and add the book to their savedBooks
-    //       const updatedUser = await User.findByIdAndUpdate(
-    //         context.user._id,
-    //         { $addToSet: { savedMovie: { movieId } } },
-    //         { new: true, runValidators: true }
-    //       ).populate('savedMovies');
 
-    //       console.log('Updated user:', updatedUser); // log
+          // Update the user and add the book to their savedBooks
+          const updatedUser = await User.findByIdAndUpdate(
+            context.user._id,
+            { $addToSet: { savedMovies: newMovie } },
+            { new: true, runValidators: true }
+          ).populate('savedMovies');
 
-    //       if (!updatedUser) {
-    //         throw new Error('User not found');
-    //       }
+          console.log('Updated user:', updatedUser); // log
 
-    //       // Return the newly created book, not the user
-    //       return movies;
-    //     } catch (error) {
-    //       console.error('Error in saveMovie mutation:', error);
-    //       throw new Error('Failed to save the movie');
-    //     }
-    //   }
-    //   throw new AuthenticationError('You need to be logged in!');
-    // },
+          if (!updatedUser) {
+            throw new Error('User not found');
+          }
+
+          // Return the newly created book, not the user
+          return updatedUser;
+        } catch (error) {
+          console.error('Error in saveMovie mutation:', error);
+          throw new Error('Failed to save the movie');
+        }
+      }
+      throw new AuthenticationError('You need to be logged in!');
+    },
 
 
     // removeMovie: async (_: any, { movieId }: { movieId: string }, context: Context) => {

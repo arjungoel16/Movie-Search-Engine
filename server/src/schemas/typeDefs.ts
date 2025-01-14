@@ -85,6 +85,7 @@ const typeDefs = gql`
     saveSeenItMovie(input: MovieInput!): User
     removeMovie(movieId: String!): User
     rateMovie(movieId: String!, rating: Float!): User
+    saveMovie(input: MovieInput!): User
   }
 `;
 

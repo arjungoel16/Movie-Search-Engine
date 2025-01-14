@@ -25,29 +25,19 @@ export const ADD_USER = gql`
 `;
 
 // saves movies within the users space
-export const SAVE_Movie = gql`
-  mutation saveMovie(
-    $authors: [String]!
-    $description: String!
-    $title: String!
-    $movieId: ID!
-    
-  ) {
-     saveMovie(
-    // Directors: $authors
-    // description: $description
-      title: $title
-      movieId: $movieId
-    ) {
+export const SAVE_MOVIE = gql`
+mutation saveMovie($input: MovieInput!) {
+  saveMovie(input: $input) {
+    user {
       _id
       username
-    
-      savedMovie {
+      savedMovies {
         movieId
         title
       }
     }
   }
+}
 `;
 
 
