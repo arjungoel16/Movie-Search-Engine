@@ -1,5 +1,5 @@
-import User from '../models/index.js';
-import { AuthenticationError, signToken } from '../services/auth.js';
+import User from '../models/index';
+import { AuthenticationError, signToken } from '../services/auth';
 // import Movie from '../models/movies.js';
 
 interface User {
@@ -17,7 +17,7 @@ interface Context {
 const TMDB_API_KEY = process.env.REACT_APP_TMDB_API_KEY;
 const BASE_URL = 'https://api.themoviedb.org/3';
 
-const resolvers: { Query: unknown; Mutation: unknown } = {
+const resolvers = {
   Query: {
     me: async (_: unknown, { filter }: { filter?: { type: string } }, context: Context) => {
       if (!context.user) throw new AuthenticationError('You must be logged in');
@@ -33,27 +33,27 @@ const resolvers: { Query: unknown; Mutation: unknown } = {
         {
           headers: {
             Authorization: `Bearer ${TMDB_API_KEY}`,
-          }, 
+          },
         }
       );
       const { results } = await response.json();
 
-      return results.map((movie: { 
-        adult: boolean; 
-        backdrop_path: string; 
-        genre_ids: number[]; 
-        id: number; 
-        original_language: string; 
-        original_title: string; 
-        overview: string; 
-        popularity: number; 
-        poster_path: string; 
-        release_date: string; 
-        title: string; 
-        video: boolean; 
-        vote_average: number; 
-        vote_count: number; 
-        media_type: string; 
+      return results.map((movie: {
+        adult: boolean;
+        backdrop_path: string;
+        genre_ids: number[];
+        id: number;
+        original_language: string;
+        original_title: string;
+        overview: string;
+        popularity: number;
+        poster_path: string;
+        release_date: string;
+        title: string;
+        video: boolean;
+        vote_average: number;
+        vote_count: number;
+        media_type: string;
       }) => ({
         adult: movie.adult,
         backdropPath: movie.backdrop_path,
