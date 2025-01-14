@@ -2,12 +2,13 @@ import express from 'express';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 
-import { typeDefs, resolvers } from './schemas/index.js';
+import { typeDefs, resolvers } from './schemas/index';
 import db from './config/connection.js';
+// import { IResolvers } from '@graphql-tools/utils';
 
-import { fileURLToPath } from 'url';  
-import { dirname, join } from 'path'; 
-const __filename = fileURLToPath(import.meta.url); 
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const path = { join };
 
@@ -23,20 +24,23 @@ const server = new ApolloServer({
 const startApolloServer = async () => {
   await server.start();
 
-  await db();   // ?? why is this here? I thought we were using mongoose.connect() in connection.js
+  await db();
 
   const PORT = process.env.PORT || 3001;
   const app = express();
 
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
-  
-  app.use('/graphql', expressMiddleware(server as any,
+
+  app.use('/graphql', expressMiddleware(server,
     {
-      context: authenticateToken as any
+      context: async ({ req }) => {
+        const user = await authenticateToken({ req });
+        return { user };
+      }
     }
   ));
-  
+
   app.use(cors());  // enable CORS for all requests, connect port 3000 to 3001
 
   // if we're in production, serve client/dist as static assets
@@ -47,7 +51,7 @@ const startApolloServer = async () => {
       res.sendFile(path.join(__dirname, '../../client/dist/index.html'));
     });
   }
-  
+
   // db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
   app.listen(PORT, () => {
