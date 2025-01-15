@@ -101,7 +101,7 @@ const resolvers = {
     },
 
 
-    saveMovie: async (_parent: any, { input }: { input: unknown }, context: any) => {
+    saveMovie: async (_parent: string, { input }: { input: unknown }, context: any) => {
 
       if (context.user) {
         console.log('Received movie data:', input,context.user._id); // log
