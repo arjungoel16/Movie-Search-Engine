@@ -23,7 +23,7 @@ const resolvers = {
       if (!context.user) throw new AuthenticationError('You must be logged in');
 
       const filters = filter ? { /* Add filtering logic */ } : {};
-      return await User.User.findOne({ _id: context.user._id })
+      return await User.findOne({ _id: context.user._id })
         .populate({ path: 'nextUpMovies', match: filters })
         .populate({ path: 'seenItMovies', match: filters });
     },
@@ -79,13 +79,13 @@ const resolvers = {
       { input }: { input: { username: string; email: string; password: string } }
     ) => {
       console.log(input);
-      const user = await User.User.create(input);
+      const user = await User.create(input);
       const token = signToken(user.username, user.email, user._id);
       return { token, user };
     },
 
     login: async (_: unknown, { email }: { email: string }) => {
-      const user = await User.User.findOne({ $or: [{ username: email }, { email }] });
+      const user = await User.findOne({ $or: [{ username: email }, { email }] });
 
       if (!user) {
         throw new AuthenticationError("Can't find this user");
@@ -99,30 +99,30 @@ const resolvers = {
       const token = signToken(user.username, user.email, user._id);
       return { token, user };
     },
-    
-  
+
+
     saveMovie: async (_parent: any, { input }: { input: unknown }, context: any) => {
-      
+
       if (context.user) {
-        console.log('Received movie data:', input); // log
+        console.log('Received movie data:', input,context.user._id); // log
 
         try {
           // Create the book
-          const newMovie = await Movie.create(input);
-          console.log('Created movie:', newMovie); // log 
+          // const newMovie = await Movie.create(input);
+          // console.log('Created movie:', newMovie); // log
 
 
           // Update the user and add the book to their savedBooks
           const updatedUser = await User.findByIdAndUpdate(
             context.user._id,
-            { $addToSet: { savedMovies: newMovie } },
+            { $addToSet: { savedMovies: input } },
             { new: true, runValidators: true }
-          ).populate('savedMovies');
+          )
 
           console.log('Updated user:', updatedUser); // log
 
           if (!updatedUser) {
-            throw new Error('User not found');
+            console.log('User not found');
           }
 
           // Return the newly created book, not the user
@@ -155,7 +155,7 @@ const resolvers = {
 
     rateMovie: async (_: unknown, { movieId, rating }: { movieId: string; rating: number }, context: Context) => {
       if (context.user) {
-        const updatedUser = await User.User.findOneAndUpdate(
+        const updatedUser = await User.findOneAndUpdate(
           { _id: context.user._id },
           {
             $set: {
