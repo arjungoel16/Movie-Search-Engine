@@ -5,7 +5,9 @@ import { Container, Card, Button, Row, Col } from 'react-bootstrap';
 import { useQuery, useMutation } from '@apollo/client';
 
 import Auth from '../utils/auth';
-import { removeMovieId } from '../utils/localStorage';
+
+// import { removeMovie } from '../utils/localStorage';
+
 
 import React from 'react';
 import { GET_ME } from '../utils/queries';
@@ -29,13 +31,15 @@ const SavedMovies: React.FC = () => {
       return false;
     }
 
-    try {
-      removeMovieId(movieId);
+    // try {
+    //   await removeMovie({
+    //     variables: { movieId },
+    //   });
 
-      removeMovieId(movieId);
-    } catch (err) {
-      console.error(err);
-    }
+    //   removeMovie(movieId);
+    // } catch (err) {
+    //   console.error(err);
+    // }
   };
 
   // if data isn't here yet, say so
