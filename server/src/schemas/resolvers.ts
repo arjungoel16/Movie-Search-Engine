@@ -17,7 +17,7 @@ interface Context {
 const TMDB_API_KEY = process.env.REACT_APP_TMDB_API_KEY;
 const BASE_URL = 'https://api.themoviedb.org/3';
 
-const resolvers: { Query: unknown; Mutation: unknown } = {
+const resolvers = {
   Query: {
     me: async (_: unknown, { filter }: { filter?: { type: string } }, context: Context) => {
       if (!context.user) throw new AuthenticationError('You must be logged in');
@@ -33,27 +33,27 @@ const resolvers: { Query: unknown; Mutation: unknown } = {
         {
           headers: {
             Authorization: `Bearer ${TMDB_API_KEY}`,
-          }, 
+          },
         }
       );
       const { results } = await response.json();
 
-      return results.map((movie: { 
-        adult: boolean; 
-        backdrop_path: string; 
-        genre_ids: number[]; 
-        id: number; 
-        original_language: string; 
-        original_title: string; 
-        overview: string; 
-        popularity: number; 
-        poster_path: string; 
-        release_date: string; 
-        title: string; 
-        video: boolean; 
-        vote_average: number; 
-        vote_count: number; 
-        media_type: string; 
+      return results.map((movie: {
+        adult: boolean;
+        backdrop_path: string;
+        genre_ids: number[];
+        id: number;
+        original_language: string;
+        original_title: string;
+        overview: string;
+        popularity: number;
+        poster_path: string;
+        release_date: string;
+        title: string;
+        video: boolean;
+        vote_average: number;
+        vote_count: number;
+        media_type: string;
       }) => ({
         adult: movie.adult,
         backdropPath: movie.backdrop_path,
@@ -78,6 +78,7 @@ const resolvers: { Query: unknown; Mutation: unknown } = {
       _: unknown,
       { input }: { input: { username: string; email: string; password: string } }
     ) => {
+      console.log(input);
       const user = await User.User.create(input);
       const token = signToken(user.username, user.email, user._id);
       return { token, user };
@@ -100,39 +101,39 @@ const resolvers: { Query: unknown; Mutation: unknown } = {
     },
     
   
-    // saveMovie: async (_parent: any, { movieId }: { movieId: string }, context: any) => {
-    //   console.log('User saved a movie', context.user);
-    //   console.log('Incoming movie', movieId);
-    //   if (context.user) {
-    //     console.log('Received movie data:', movieId); // log
+    saveMovie: async (_parent: any, { input }: { input: unknown }, context: any) => {
+      
+      if (context.user) {
+        console.log('Received movie data:', input); // log
 
-    //     try {
-    //       // Create the book
-    //       const movies = await Movie.create({ movieId });
-    //       console.log('Created movie:', movies); // log 
+        try {
+          // Create the book
+          const newMovie = await Movie.create(input);
+          console.log('Created movie:', newMovie); // log 
 
-    //       // Update the user and add the book to their savedBooks
-    //       const updatedUser = await User.findByIdAndUpdate(
-    //         context.user._id,
-    //         { $addToSet: { savedMovie: { movieId } } },
-    //         { new: true, runValidators: true }
-    //       ).populate('savedMovies');
 
-    //       console.log('Updated user:', updatedUser); // log
+          // Update the user and add the book to their savedBooks
+          const updatedUser = await User.findByIdAndUpdate(
+            context.user._id,
+            { $addToSet: { savedMovies: newMovie } },
+            { new: true, runValidators: true }
+          ).populate('savedMovies');
 
-    //       if (!updatedUser) {
-    //         throw new Error('User not found');
-    //       }
+          console.log('Updated user:', updatedUser); // log
 
-    //       // Return the newly created book, not the user
-    //       return movies;
-    //     } catch (error) {
-    //       console.error('Error in saveMovie mutation:', error);
-    //       throw new Error('Failed to save the movie');
-    //     }
-    //   }
-    //   throw new AuthenticationError('You need to be logged in!');
-    // },
+          if (!updatedUser) {
+            throw new Error('User not found');
+          }
+
+          // Return the newly created book, not the user
+          return updatedUser;
+        } catch (error) {
+          console.error('Error in saveMovie mutation:', error);
+          throw new Error('Failed to save the movie');
+        }
+      }
+      throw new AuthenticationError('You need to be logged in!');
+    },
 
 
     // removeMovie: async (_: any, { movieId }: { movieId: string }, context: Context) => {

@@ -10,7 +10,7 @@ dotenv.config();
 
 import mongoose from 'mongoose';
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/MovieMERN';
 
 // Download & Install MongoDB compass > Create database for project > putt the db name after / above
 // > once done, re-build and re-start terminal.

@@ -5,7 +5,9 @@ import { Container, Card, Button, Row, Col } from 'react-bootstrap';
 import { useQuery, useMutation } from '@apollo/client';
 
 import Auth from '../utils/auth';
+
 // import { removeMovie } from '../utils/localStorage';
+
 
 import React from 'react';
 import { GET_ME } from '../utils/queries';
