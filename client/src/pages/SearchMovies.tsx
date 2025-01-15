@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useMutation } from "@apollo/client"; // Assuming you are using Apollo for GraphQL
-import { SAVE_MOVIE } from "../utils/mut";
+// import { useMutation } from "@apollo/client"; // Assuming you are using Apollo for GraphQL
+// import { SAVE_MOVIE } from "../utils/mutations";
 import { searchMovies } from "../utils/api";
 // Mock mutation, replace with actual mutation if you have one
 // Replace with your actual GraphQL mutation if required
@@ -54,6 +54,7 @@ const SearchMovies = () => {
       }
 
       const data = await response.json();
+      console.log(data);
 
       // Assuming 'data.items' contains movie results
       const movieData = data.results.map((movie: any) => ({
