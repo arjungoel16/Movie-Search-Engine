@@ -27,28 +27,23 @@ export const ADD_USER = gql`
 // saves movies within the users space
 
 export const SAVE_Movie = gql`
-  mutation saveMovie(
-    $authors: [String]!
-    $description: String!
-    $title: String!
-    $movieId: ID!
-    
-  ) {
-     saveMovie(
-      title: $title
-      movieId: $movieId
-    ) {
+mutation SaveMovie($input: MovieInput!) {
+  saveMovie(input: $input) {
+    _id
+    username
+    email
+ 
+    seenItMovies {
       _id
-      username
-      savedMovies {
-        movieId
-        title
-      }
+      movieId
+      title
+      overview
+      posterPath
+      releaseDate
+      voteAverage
     }
   }
-}
-`;
-
+}`;
 
 // function for removing movies from the users space
 export const REMOVE_MOVIE = gql`
