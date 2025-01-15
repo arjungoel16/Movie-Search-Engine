@@ -78,6 +78,7 @@ const resolvers = {
       _: unknown,
       { input }: { input: { username: string; email: string; password: string } }
     ) => {
+      console.log(input);
       const user = await User.User.create(input);
       const token = signToken(user.username, user.email, user._id);
       return { token, user };
