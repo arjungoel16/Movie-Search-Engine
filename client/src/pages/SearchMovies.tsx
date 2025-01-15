@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useMutation } from "@apollo/client"; // Assuming you are using Apollo for GraphQL
-import { SAVE_MOVIE } from '../utils/mut';
+// import { useMutation } from "@apollo/client"; // Assuming you are using Apollo for GraphQL
+// import { SAVE_MOVIE } from "../utils/mutations";
 import { searchMovies } from "../utils/api";
 // Mock mutation, replace with actual mutation if you have one
- // Replace with your actual GraphQL mutation if required
+// Replace with your actual GraphQL mutation if required
+import { Container, Row, Col } from "react-bootstrap";
+import "./SearchMovies.css";
 
 const SearchMovies = () => {
   // State for holding returned movie data from the search API
@@ -42,19 +44,23 @@ const SearchMovies = () => {
     }
 
     try {
-      const response = await searchMovies ('6429cb48e921c8274e51fab9b640e9f6', searchInput)
+      const response = await searchMovies(
+        "6429cb48e921c8274e51fab9b640e9f6",
+        searchInput
+      );
 
       if (!response.ok) {
         throw new Error("Something went wrong while fetching movie data!");
       }
 
       const data = await response.json();
+      console.log(data);
 
       // Assuming 'data.items' contains movie results
       const movieData = data.results.map((movie: any) => ({
         movieId: movie.id,
         title: movie.title,
-        imageUrl: "https://image.tmdb.org/t/p/original" + movie.poster_path,
+        imageUrl: "https://image.tmdb.org/t/p/original" + movie.poster_paths,
       }));
 
       setSearchedMovie(movieData);
@@ -66,6 +72,10 @@ const SearchMovies = () => {
 
   // Method to handle saving a movie to localStorage
   const handleSaveMovie = (movieId: string) => {
+
+    // use graphql save_movie mutation and save to datase
+    // useEffect to fetch saved movies from databas to render img/title instead of movie id
+
     if (savedMovieIds.includes(movieId)) {
       alert("This movie is already saved.");
       return;
@@ -76,42 +86,55 @@ const SearchMovies = () => {
   };
 
   return (
-    <div>
-      <h1>Search for Movies</h1>
-      <form onSubmit={handleFormSubmit}>
-        <input
-          type="text"
-          placeholder="Search for a movie"
-          value={searchInput}
-          onChange={handleInputChange}
-        />
-        <button type="submit">Search</button>
-      </form>
-
-      <div>
-        <h2>Search Results</h2>
-        <ul>
-          {searchedMovie.map((movie) => (
-            <li key={movie.movieId}>
-              <span>{movie.title}</span>
-              <img src={movie.imageUrl}></img>
-              <button onClick={() => handleSaveMovie(movie.movieId)}>
-                Save
-              </button>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <div>
-        <h2>Saved Movies</h2>
-        <ul>
-          {savedMovieIds.map((movieId) => (
-            <li key={movieId}>{movieId}</li>
-          ))}
-        </ul>
-      </div>
-    </div>
+    <Container>
+      <Row>
+        <h1>Search for Movies</h1>
+        <form onSubmit={handleFormSubmit} className="container">
+          <input
+            type="text"
+            placeholder="Search for a movie"
+            value={searchInput}
+            onChange={handleInputChange}
+          />
+          <button type="submit" className="btn btn-primary">
+            Search
+          </button>
+        </form>
+      </Row>
+      <Row>
+        <Col xs={9}>
+          <Container className="movie-container text-center">
+            <h2 className="text-center">Search Results</h2>
+            <ul className="d-flex flex-wrap">
+              {searchedMovie.map((movie) => (
+                <li key={movie.movieId} className="card">
+                  <h4>{movie.title}</h4>
+                  <figure>
+                    <img className="img-fluid" src={movie.imageUrl}></img>
+                  </figure>
+                  <button
+                    className="btn btn-success"
+                    onClick={() => handleSaveMovie(movie.movieId)}
+                  >
+                    Save Movie
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </Container>
+        </Col>
+        <Col>
+          <Container>
+            <h2>Saved Movies</h2>
+            <ul>
+              {savedMovieIds.map((movieId) => (
+                <li key={movieId}>{movieId}</li>
+              ))}
+            </ul>
+          </Container>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

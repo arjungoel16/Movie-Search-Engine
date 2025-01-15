@@ -9,6 +9,9 @@ import Auth from '../utils/auth';
 // import { removeMovie } from '../utils/localStorage';
 
 
+import "./SavedMovies.css";
+
+
 import React from 'react';
 import { GET_ME } from '../utils/queries';
 
@@ -79,6 +82,7 @@ const SavedMovies: React.FC = () => {
                 <Card key={movie} border='dark'>
                   {movie.image ? (
                     <Card.Img
+                      className="img-fluid"
                       src={movie.image}
                       alt={`The cover for ${movie.title}`}
                       variant='top'
@@ -89,7 +93,7 @@ const SavedMovies: React.FC = () => {
                     <p className='small'>Directors: {movie.directors}</p>
                     <Card.Text>{movie.description}</Card.Text>
                     <Button
-                      className='btn-block btn-danger'
+                      className='btn btn-block btn-danger'
                       onClick={() => handleDeleteMovie(movie.movieId)}
                     >
                       Delete this Movie!
