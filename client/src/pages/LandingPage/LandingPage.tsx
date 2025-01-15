@@ -4,6 +4,15 @@ import LoginForm from '../../components/LoginForm';
 
 const LandingPage = () => {
   const [showLoginForm, setShowLoginForm] = useState(false);
+  // add something to break the endless loop of redirecting the user to the login page -> once user logs in, the user is in an endless loop of being redirected to the login page
+        // write a conditional to break the loop -> if user is logged in, redirect user to the components page
+        // if (user is logged in) {
+        //   return <components />;
+        // if (showLoginForm) {
+        //   return <LoginForm handleModalClose={() => setShowLoginForm(false)} />;
+        // }
+        // redirect user to the home page
+        // components();
 
   const handleLoginClick = () => {
     setShowLoginForm(true);
