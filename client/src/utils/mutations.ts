@@ -34,8 +34,6 @@ export const SAVE_Movie = gql`
     
   ) {
      saveMovie(
-    // Directors: $authors
-    // description: $description
       title: $title
       movieId: $movieId
     ) {

@@ -1,12 +1,14 @@
 import { useState } from 'react';
+import {useNavigate} from "react-router-dom"
 import './LandingPage.css';
 import LoginForm from '../../components/LoginForm';
 
 const LandingPage = () => {
+  let navigate = useNavigate()
   const [showLoginForm, setShowLoginForm] = useState(false);
 
   const handleLoginClick = () => {
-    setShowLoginForm(true);
+    navigate("/searchMovies")
   };
 
   return (

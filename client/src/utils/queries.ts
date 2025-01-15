@@ -8,8 +8,6 @@ export const GET_ME = gql`
       email
       savedMovies {
         movieId
-        // Directors
-        // description
         title
       }
     }

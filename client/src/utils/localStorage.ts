@@ -19,8 +19,8 @@ export const saveMovieIds = (MovieIdArr) => {
   }
 };
 
-export const removeBookId = (bookId) => {
-  const savedBookIds = localStorage.getItem('saved_books')
+export const removeMovieId = (MovieId) => {
+  const savedBookIds = localStorage.getItem('saved_movies')
     ? JSON.parse(localStorage.getItem('saved_books'))
     : null;
 

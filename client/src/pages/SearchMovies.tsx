@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useMutation } from "@apollo/client"; // Assuming you are using Apollo for GraphQL
 import { SAVE_MOVIE } from '../utils/mut';
+import { searchMovies } from "../utils/api";
 // Mock mutation, replace with actual mutation if you have one
  // Replace with your actual GraphQL mutation if required
 
@@ -41,7 +42,7 @@ const SearchMovies = () => {
     }
 
     try {
-      const response = await fetch(`https://api.example.com/search?query=${searchInput}`);
+      const response = await searchMovies ('6429cb48e921c8274e51fab9b640e9f6', searchInput)
 
       if (!response.ok) {
         throw new Error("Something went wrong while fetching movie data!");
@@ -50,9 +51,10 @@ const SearchMovies = () => {
       const data = await response.json();
 
       // Assuming 'data.items' contains movie results
-      const movieData = data.items.map((movie: any) => ({
+      const movieData = data.results.map((movie: any) => ({
         movieId: movie.id,
-        title: movie.volumeInfo.title,
+        title: movie.title,
+        imageUrl: "https://image.tmdb.org/t/p/original" + movie.poster_path,
       }));
 
       setSearchedMovie(movieData);
@@ -92,6 +94,7 @@ const SearchMovies = () => {
           {searchedMovie.map((movie) => (
             <li key={movie.movieId}>
               <span>{movie.title}</span>
+              <img src={movie.imageUrl}></img>
               <button onClick={() => handleSaveMovie(movie.movieId)}>
                 Save
               </button>
