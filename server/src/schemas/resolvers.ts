@@ -107,12 +107,6 @@ const resolvers = {
         console.log('Received movie data:', input,context.user._id); // log
 
         try {
-          // Create the book
-          // const newMovie = await Movie.create(input);
-          // console.log('Created movie:', newMovie); // log
-
-
-          // Update the user and add the book to their savedBooks
           const updatedUser = await User.findByIdAndUpdate(
             context.user._id,
             { $addToSet: { savedMovies: input } },
@@ -125,7 +119,6 @@ const resolvers = {
             console.log('User not found');
           }
 
-          // Return the newly created book, not the user
           return updatedUser;
         } catch (error) {
           console.error('Error in saveMovie mutation:', error);
@@ -136,22 +129,6 @@ const resolvers = {
     },
 
 
-    // removeMovie: async (_: any, { movieId }: { movieId: string }, context: Context) => {
-    //   if (context.user) {
-    //     const updatedUser = await User.findOneAndUpdate(
-    //       { _id: context.user._id },
-    //       { $pull: { savedMovies: { movieId } } },
-    //       { new: true }
-    //     );
-
-    //     if (!updatedUser) {
-    //       throw new AuthenticationError("Couldn't find user with this id!");
-    //     }
-
-    //     return updatedUser;
-    //   }
-    //   throw new AuthenticationError('You need to be logged in!');
-    // },
 
     rateMovie: async (_: unknown, { movieId, rating }: { movieId: string; rating: number }, context: Context) => {
       if (context.user) {
@@ -177,57 +154,6 @@ const resolvers = {
       throw new AuthenticationError('You need to be logged in!');
     },
 
-    // async saveNextUpMovie(_ : unknown, { input } : any, context : Context) {
-    //   if (!context.user) throw new AuthenticationError('You must be logged in.');
-    
-    //   const { movieId, title, overview, posterPath, releaseDate, voteAverage } = input;   // title, description, genre, director, cast, year
-    
-    //   let movie = await Movie.findOne({ movieId });
-    //   if (!movie) {
-    //     movie = await Movie.create({
-    //       movieId,
-    //       title,
-    //       overview,
-    //       posterPath,
-    //       releaseDate,
-    //       voteAverage,
-    //     });
-    //   }
-    
-    //   const user = await User.findByIdAndUpdate(
-    //     context.user._id,
-    //     { $addToSet: { nextUpMovies: movie._id } },
-    //     { new: true }
-    //   ).populate('nextUpMovies');
-    
-    //   return user;
-    // },
-
-    // async saveSeenItMovie(_ : unknown, { input }: any, context: Context) {
-    //   if (!context.user) throw new AuthenticationError('You must be logged in.');
-    
-    //   const { movieId, title, overview, posterPath, releaseDate, voteAverage } = input;
-    
-    //   let movie = await Movie.findOne({ movieId });
-    //   if (!movie) {
-    //     movie = await Movie.create({
-    //       movieId,
-    //       title,
-    //       overview,
-    //       posterPath,
-    //       releaseDate,
-    //       voteAverage,
-    //     });
-    //   }
-    
-    //   const user = await User.findByIdAndUpdate(
-    //     context.user._id,
-    //     { $addToSet: { seenItMovies: movie._id } },
-    //     { new: true }
-    //   ).populate('seenItMovies');
-    
-    //   return user;
-    // }
   },
 };
 

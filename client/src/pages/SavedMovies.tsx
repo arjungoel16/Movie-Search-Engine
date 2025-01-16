@@ -26,7 +26,6 @@ const SavedMovies: React.FC = () => {
 
   // The useQuery hook automatically executes when the component mounts and will re-fetch data when necessary, making the useEffect hook unnecessary in this case.
 
-  // create function that accepts the book's mongo _id value as param and deletes the book from the database
   const handleDeleteMovie = async (movieId: any) => {
     const token = Auth.logIn() ? Auth.getToken() : null;
 
@@ -75,7 +74,7 @@ const SavedMovies: React.FC = () => {
             : 'You have no saved movies!'}
         </h2>
         <Row>
-          {/* {userData?.savedBooks?.map((book: { bookId: string; image?: string; title: string; authors: string[]; description: string }) => { */}
+          {}
           {userData.savedMovies.map((movie: any) => {
             return (
               <Col md='4'>

@@ -25,8 +25,8 @@ export const saveMovieIds = (MovieIdArr: string[]) => {
 // allows us to remove the movie
 
 export const removeMovieId = (MovieId) => {
-  const savedBookIds = localStorage.getItem('saved_movies')
-    ? JSON.parse(localStorage.getItem('saved_books'))
+  const savedMovieIds = localStorage.getItem('saved_movies')
+    ? JSON.parse(localStorage.getItem('saved_movies'))
     : null;
 
   if (!savedMovieIds) {
