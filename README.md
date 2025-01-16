@@ -15,5 +15,9 @@ Technologies used
 
     TypeScript, Node.JS, CSS, HTML, Bootstrap, React
 
+Credits
+
+    There is an MIT License attached to the repository, please make sure to give us credit if used!
+
 
 
